@@ -221,6 +221,6 @@ hasDisk() {
 # Start webserver
 cp -r /var/www/* /run/shm
 html "Starting $APP for Docker..."
-nginx -e stderr
+nginx
 
 return 0

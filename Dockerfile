@@ -1,4 +1,4 @@
-FROM debian:trixie-slim
+FROM ubuntu:20.04
 
 ARG VERSION_ARG="0.0"
 ARG VERSION_VNC="1.5.0"
@@ -6,13 +6,15 @@ ARG VERSION_VNC="1.5.0"
 ARG DEBCONF_NOWARNINGS="yes"
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG DEBCONF_NONINTERACTIVE_SEEN="true"
+RUN apt update
+RUN apt-get install -y software-properties-common && add-apt-repository ppa:stefanberger/swtpm-focal
 
 RUN set -eu && \
     apt-get update && \
     apt-get --no-install-recommends -y install \
         tini \
         wget \
-        7zip \
+        p7zip-full \
         ovmf \
         nginx \
         swtpm \
@@ -27,8 +29,8 @@ RUN set -eu && \
         genisoimage \
         ca-certificates \
         netcat-openbsd \
-        qemu-system-x86 && \
-    apt-get clean && \
+        qemu-system-x86
+RUN apt-get clean && \
     mkdir -p /usr/share/novnc && \
     wget "https://github.com/novnc/noVNC/archive/refs/tags/v${VERSION_VNC}.tar.gz" -O /tmp/novnc.tar.gz -q --timeout=10 && \
     tar -xf /tmp/novnc.tar.gz -C /tmp/ && \
